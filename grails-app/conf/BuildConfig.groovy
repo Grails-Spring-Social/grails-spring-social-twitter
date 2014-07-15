@@ -1,3 +1,25 @@
+import grails.util.Environment
+
+final springSocialPluginsVersionSuffix
+
+switch(Environment.current.name.toLowerCase()) {
+
+  case ["staging", "test-jenkins"]:
+    springSocialPluginsVersionSuffix = '-SNAPSHOT'
+    break
+
+  case ["test","development"]:
+    springSocialPluginsVersionSuffix = '-SNAPSHOT'
+    grails.plugin.location.'spring-social-core' = '../grails-spring-social-core/'
+
+    break
+
+  default:
+    springSocialPluginsVersionSuffix = ''
+    break
+
+}
+
 /* Copyright 2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +35,7 @@
  * limitations under the License.
  */
 
-def springSocialVersion = "1.0.0.RELEASE"
+def springSocialVersion = "1.1.0.RELEASE"
 
 grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
@@ -37,12 +59,18 @@ grails.project.dependency.resolution = {
     mavenRepo "http://maven.springframework.org/release"
     mavenRepo "http://maven.springframework.org/snapshot"
     mavenRepo "http://maven.springframework.org/milestone"
+    mavenRepo "http://repo.sindica.to/nexus/content/repositories/snapshots"
   }
   dependencies {
     compile("org.springframework.social:spring-social-twitter:${springSocialVersion}") { transitive = false }
   }
   plugins {
-    compile(":spring-security-core:1.2.4")
-    compile(":spring-social-core:0.1.31")
+    compile(":spring-social-core:0.2.0.BUILD$springSocialPluginsVersionSuffix")
+    compile ":platform-core:1.0.0"
+
   }
 }
+
+
+grails.project.repos.sindicato.url = "http://repo.sindica.to/nexus/content/repositories/snapshots/"
+grails.project.repos.default = "sindicato"
